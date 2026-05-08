@@ -1,27 +1,31 @@
-const int N = 5e5 + 9;
-int a[N];
+
 struct ST {
   #define lc (n << 1)
   #define rc ((n << 1) | 1)
-  long long t[4 * N], lazy[4 * N];
-  ST() {
-    memset(t, 0, sizeof t);
-    memset(lazy, 0, sizeof lazy);
+//   long long t[4 * N], lazy[4 * N];
+  vector<ll> a, t, lazy;
+  ST(vll& a) : a(a) {
+    lazy.resize(4*a.size()+1), t.resize(4*a.size()+1);
+  }
+  ST(int n) {
+    a.resize(n), lazy.resize(4*n), t.resize(4*n);
   }
   inline void push(int n, int b, int e) {
     if (lazy[n] == 0) return;
-    t[n] = t[n] + lazy[n] * (e - b + 1);
+    t[n] = (ll) t[n] + (ll) lazy[n] * (ll) (e - b + 1);
+    t[n] %= mod;
     if (b != e) {
-      lazy[lc] = lazy[lc] + lazy[n];
-      lazy[rc] = lazy[rc] + lazy[n];
+      lazy[lc] = (ll) lazy[lc] + lazy[n];
+      lazy[rc] = (ll) lazy[rc] + lazy[n];
+      lazy[rc] %= mod, lazy[lc] %= mod;
     }
     lazy[n] = 0;
   }
   inline long long combine(long long a,long long b) {
-    return a + b;
+    return (a + b) % mod;
   }
   inline void pull(int n) {
-    t[n] = t[lc] + t[rc];
+    t[n] = (t[lc] + t[rc]) % mod;
   }
   void build(int n, int b, int e) {
     lazy[n] = 0;
@@ -52,6 +56,6 @@ struct ST {
     if (i > e || b > j) return 0; //return null
     if (i <= b && e <= j) return t[n];
     int mid = (b + e) >> 1;
-    return combine(query(lc, b, mid, i, j), query(rc, mid + 1, e, i, j));
+    return (combine(query(lc, b, mid, i, j), query(rc, mid + 1, e, i, j))) % mod;
   }
 };

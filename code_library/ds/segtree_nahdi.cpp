@@ -4,10 +4,14 @@ int a[N];
 struct ST {
   #define lc (nd << 1)
   #define rc ((nd << 1) | 1)
-  long long t[4 * N];
+  vector<long long> t, a;
 
-  ST() {
-    memset(t, 0, sizeof t);
+  ST(int n) {
+    t.resize(4*n);
+    a.resize(n);
+  }
+  ST(vector<ll> a) : a(n) {
+    t.resize(4*n);
   }
 
   inline long long combine(long long a, long long b) {
