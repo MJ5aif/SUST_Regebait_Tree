@@ -1,6 +1,3 @@
-const int N = 5e5 + 9;
-int a[N];
-
 struct ST {
   #define lc (nd << 1)
   #define rc ((nd << 1) | 1)
@@ -10,7 +7,7 @@ struct ST {
     t.resize(4*n);
     a.resize(n);
   }
-  ST(vector<ll> a) : a(n) {
+  ST(vector<long long>& a) : a(n) {
     t.resize(4*n);
   }
 
