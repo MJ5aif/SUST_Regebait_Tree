@@ -1,5 +1,4 @@
-
-#define MAXN 4000005
+#define MAXN 1000000ll
 int trie[MAXN][2], triesz[MAXN], nodes = 0, bitsz = 30;
 void insert(int x) {
   int cur = 0;
@@ -33,11 +32,25 @@ int get_max(int x) {
   }
   return ans ^ x;
 }
+// min xor with x
+int get_min(int x) {
+  int cur = 0, ans = 0;
+  for (int i = bitsz; i >= 0; --i) {
+    int child = x & (1 << i) ? 1 : 0;
+    // child = 1 - child;  // remove for get_min()
+    if (!trie[cur][child] || !triesz[trie[cur][child]]) child = 1 - child;
+    cur = trie[cur][child];
+    ans |= child << i;
+  }
+  return ans ^ x;
+}
 void deleteall(int root) {
   if (trie[root][0]) deleteall(trie[root][0]);
   if (trie[root][1]) deleteall(trie[root][1]);
+  trie[root][0] = trie[root][1] = 0;  // clear child pointers
   triesz[root] = 0;
 }
+
 void cleanup() {
   nodes = 0;
   deleteall(0);
