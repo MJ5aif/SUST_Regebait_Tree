@@ -10,7 +10,7 @@ adj.resize(n);
     bicomps(n, [&](vi& comp) {
         components.push_back(comp);
     });
-/////////////////////////////////////////////////////
+///////////////////////////////////
 
 
 vector<vector<pair<int,int>>> adj;   // adj[u] = {(v, edge_id), ...}
