@@ -32,18 +32,6 @@ int get_max(int x) {
   }
   return ans ^ x;
 }
-// min xor with x
-int get_min(int x) {
-  int cur = 0, ans = 0;
-  for (int i = bitsz; i >= 0; --i) {
-    int child = x & (1 << i) ? 1 : 0;
-    // child = 1 - child;  // remove for get_min()
-    if (!trie[cur][child] || !triesz[trie[cur][child]]) child = 1 - child;
-    cur = trie[cur][child];
-    ans |= child << i;
-  }
-  return ans ^ x;
-}
 void deleteall(int root) {
   if (trie[root][0]) deleteall(trie[root][0]);
   if (trie[root][1]) deleteall(trie[root][1]);
