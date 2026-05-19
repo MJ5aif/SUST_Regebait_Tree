@@ -1,5 +1,5 @@
 /// USAGE
-adj.resize(n);
+adj.resize(n+1);
 for(int i = 0; i < edges.size(); i++) {
   auto [u, v] = edges[i];
   adj[u].push_back({v, i});
@@ -52,9 +52,10 @@ int dfs(int at, int par, F& f) {
 
 template <class F>
 void bicomps(int n, F f) {
-  adj.resize(n);
-  num.assign(n, 0);
-  isArt.assign(n, 0);
+  adj.resize(n+1);
+  num.clear(); isArt.clear();
+  num.assign(n+1, 0);
+  isArt.assign(n+1, 0);
   bridges.clear();
   st.clear();
   Time = 0;
