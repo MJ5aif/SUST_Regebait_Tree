@@ -25,3 +25,6 @@ codebook/codebook.pdf
 
 # Editor
 .vscode
+
+# Mac
+.DS_Store
