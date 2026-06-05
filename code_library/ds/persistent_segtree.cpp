@@ -1,27 +1,22 @@
-
-template <typename T>
-struct node {
-  T val;
-  int l, r;
-};
 template <typename T>
 struct persistent_segtree {
+  struct node {
+    T val;
+    int l, r;
+  };
   int n;
-  T init_val;
+  T init_val = 0; // 0 for sum, INf for min etc
   vector<node<T>> nodes;
   vector<int> version;
-  function<T(T, T)> f;
+  // merging function
+  T f(T x, T y) { return x + y; }
   persistent_segtree() {}
-  persistent_segtree(int sz, function<T(T, T)> f, T val = 0) {
+  persistent_segtree(int sz) {
     n = sz;
-    this->f = f;
-    init_val = val;
     build(vector<T>(n, init_val));
   }
-  persistent_segtree(vector<T>& a, function<T(T, T)> f, T val = 0) {
+  persistent_segtree(vector<T>& a) {
     n = a.size();
-    this->f = f;
-    init_val = val;
     build(a);
   }
   int build(vector<T> a) {
@@ -60,7 +55,7 @@ struct persistent_segtree {
     node<T> old = nodes[u];
     nodes.pb(old);
     if (l == r) {
-      nodes[root].val = x;
+      nodes[root].val = x; // change = to += for add
       return root;
     }
     int mid = (l + r) / 2;
