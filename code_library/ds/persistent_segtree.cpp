@@ -1,5 +1,5 @@
 template <typename T>
-struct persistent_segtree {
+struct PST {
   struct node {
     T val;
     int l, r;
@@ -9,23 +9,23 @@ struct persistent_segtree {
   vector<node> nodes;
   vector<int> version;
   T merge(T x, T y) { return x + y; }
-  persistent_segtree() {}
-  persistent_segtree(int sz) {
+  PST() {}
+  PST(int sz) {
     n = sz;
     build(vector<T>(n, identity));
   }
-  persistent_segtree(vector<T>& a) {
+  PST(vector<T>& a) {
     n = a.size();
     build(a);
   }
   int build(vector<T> a) {
     int root = _build(0, n - 1, a);
-    version.pb(root);
+    version.push_back(root);
     return version.size() - 1;
   }
   int _build(int l, int r, vector<T>& a) {
     int root = nodes.size();
-    nodes.pb({});
+    nodes.push_back({});
     if (l == r) {
       nodes[root].val = a[l];
       return root;
@@ -41,13 +41,13 @@ struct persistent_segtree {
   int update(int i, T x, int v = -1) {
     if (v == -1) v = version.size() - 1;
     int root = _update(version[v], 0, n - 1, i, x);
-    version.pb(root);
+    version.push_back(root);
     return version.size() - 1;
   }
   int _update(int u, int l, int r, int i, T x) {
     int root = nodes.size();
     node old = nodes[u];
-    nodes.pb(old);
+    nodes.push_back(old);
     if (l == r) {
       nodes[root].val = x;  // change = to += for add
       return root;

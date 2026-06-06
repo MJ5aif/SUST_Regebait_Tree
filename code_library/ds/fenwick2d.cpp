@@ -33,4 +33,9 @@ struct FT2 {
     }
     return sum;
   }
+  ll query(ll x1, ll y1, ll x2, ll y2) {
+    return (query(x2,y2) - query(x1-1, y2) - 
+            query(x2, y1-1) + query(x1-1, y1-1) + 
+            5ll*MOD) % MOD;
+  }
 };
