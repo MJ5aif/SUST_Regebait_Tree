@@ -14,6 +14,7 @@ struct CD {
     u = dfs(u, p, sz[u]);
     dead[u] = true;
     par[u] = p;
+    // u is centroid, process here...
     for (int v : tree[u]) {
       if (!dead[v]) build(v, u);
     }
