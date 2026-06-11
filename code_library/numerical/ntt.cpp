@@ -1,33 +1,42 @@
-const ll mod = (119 << 23) + 1, root = 62;  // = 998244353
-// For p < 2^30 there is also e.g. 5 << 25, 7 << 26, 479 << 21
-// and 483 << 21 (same root). The last two are > 10^9.
-typedef vector<ll> vl;
-void ntt(vl& a) {
-  int n = sz(a), L = 31 - __builtin_clz(n);
-  static vl rt(2, 1);
-  for (static int k = 2, s = 2; k < n; k *= 2, s++) {
-    rt.resize(n);
-    ll z[] = {1, modpow(root, mod >> s)};
-    rep(i, k, 2 * k) rt[i] = rt[i / 2] * z[i & 1] % mod;
+const long long mod = 998244353, root = 3;
+void ntt(long long* x, long long* temp, long long* roots, int N, int skip) {
+  if (N == 1) return;
+  int n2 = N / 2;
+  ntt(x, temp, roots, n2, skip * 2);
+  ntt(x + skip, temp, roots, n2, skip * 2);
+  for (int i = 0; i < N; i++) temp[i] = x[i * skip];
+  for (int i = 0; i < n2; i++) {
+    long long s = temp[2 * i], t = temp[2 * i + 1] * roots[skip * i];
+    x[skip * i] = (s + t) % mod;
+    x[skip * (i + n2)] = ((s - t) % mod + mod) % mod;
   }
-  vi rev(n);
-  rep(i, 0, n) rev[i] = (rev[i / 2] | (i & 1) << L) / 2;
-  rep(i, 0, n) if (i < rev[i]) swap(a[i], a[rev[i]]);
-  for (int k = 1; k < n; k *= 2)
-    for (int i = 0; i < n; i += 2 * k) rep(j, 0, k) {
-        ll z = rt[j + k] * a[i + j + k] % mod, &ai = a[i + j];
-        a[i + j + k] = ai - z + (z > ai ? mod : 0);
-        ai += (ai + z >= mod ? z - mod : z);
-      }
 }
-vl conv(const vl& a, const vl& b) {
-  if (a.empty() || b.empty()) return {};
-  int s = sz(a) + sz(b) - 1, B = 32 - __builtin_clz(s), n = 1 << B;
-  int inv = modpow(n, mod - 2);
-  vl L(a), R(b), out(n);
-  L.resize(n), R.resize(n);
-  ntt(L), ntt(R);
-  rep(i, 0, n) out[-i & (n - 1)] = (ll)L[i] * R[i] % mod * inv % mod;
-  ntt(out);
-  return {out.begin(), out.begin() + s};
+void ntt(vector<long long>& x, bool inv = false) {
+  long long e = fastexp(root, (mod - 1) / x.size(), mod);
+  if (inv) e = fastexp(e, mod - 2, mod);
+  vector<long long> roots(x.size(), 1), temp = roots;
+  for (size_t i = 1; i < x.size(); i++) roots[i] = roots[i - 1] * e % mod;
+  ntt(&x[0], &temp[0], &roots[0], x.size(), 1);
+}
+vector<long long> conv(vector<long long> a, vector<long long> b) {
+  int s = a.size() + b.size() - 1;
+  if (s <= 0) return {};
+  int L = s > 1 ? 32 - __builtin_clz(s - 1) : 0, n = 1 << L;
+  if (s <= 200) {
+    vector<long long> c(s);
+    for (size_t i = 0; i < a.size(); i++) {
+      for (size_t j = 0; j < b.size(); j++) {
+        c[i + j] = (c[i + j] + a[i] * b[j]) % mod;
+      }
+    }
+    return c;
+  }
+  a.resize(n); ntt(a);
+  b.resize(n); ntt(b);
+  vector<long long> c(n);
+  long long d = fastexp(n, mod - 2, mod);
+  for (int i = 0; i < n; i++) c[i] = a[i] * b[i] % mod * d % mod;
+  ntt(c, true);
+  c.resize(s);
+  return c;
 }
