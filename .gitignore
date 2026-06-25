@@ -22,6 +22,7 @@ codebook/codebook.pdf
 *.xdy
 *.dvi
 *.gz
+*.synctex
 
 # Editor
 .vscode
