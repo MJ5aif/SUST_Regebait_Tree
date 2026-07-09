@@ -64,6 +64,33 @@ struct PST {
     nodes[root].val = merge(nodes[nodes[root].l].val, nodes[nodes[root].r].val);
     return root;
   }
+  int update_batch(const vector<pair<int, T>>& up, int v = -1) {
+    if (v == -1) v = version.size() - 1;
+    if (up.empty()) { version.push_back(version[v]); return version.size() - 1; }
+    int root = _update_batch(version[v], 0, n - 1, up, 0, (int)up.size() - 1);
+    version.push_back(root);
+    return version.size() - 1;
+  }
+  // Updates values up[x].first with delta up[x].second. Assumes that up is sorted.
+  int _update_batch(int u, int l, int r, const vector<pair<int, T>>& up, int ql, int qr) {
+    if (ql > qr) return u;
+    int root = nodes.size();
+    nodes.push_back(nodes[u]);
+ 
+    if (l == r) {
+      for (int i = ql; i <= qr; ++i) nodes[root].val += up[i].second;
+      return root;
+    }
+ 
+    int mid = (l + r) / 2;
+    int sp = upper_bound(up.begin() + ql, up.begin() + qr + 1, mid,
+      [](int m, const pair<int, T>& p) { return m < p.first; }) - up.begin();
+ 
+    nodes[root].l = _update_batch(nodes[u].l, l, mid, up, ql, sp - 1);
+    nodes[root].r = _update_batch(nodes[u].r, mid + 1, r, up, sp, qr);
+    nodes[root].val = merge(nodes[nodes[root].l].val, nodes[nodes[root].r].val);
+    return root;
+  }
   T get(int l, int r, int v) { return _get(version[v], 0, n - 1, l, r); }
   T _get(int u, int tl, int tr, int l, int r) {
     if (l > tr || r < tl) return identity;

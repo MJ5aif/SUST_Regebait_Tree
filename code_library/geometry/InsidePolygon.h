@@ -1,6 +1,6 @@
 template <class P>
 bool inPolygon(vector<P>& p, P a, bool strict = true) {
-  int cnt = 0, n = sz(p);
+  int cnt = 0, n = p.size();
   rep(i, 0, n) {
     P q = p[(i + 1) % n];
     if (onSegment(p[i], q, a)) return !strict;
