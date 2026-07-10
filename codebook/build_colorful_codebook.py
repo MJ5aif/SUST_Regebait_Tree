@@ -1,4 +1,5 @@
 import os
+import re
 
 # Auto-detect base directory for code_library
 if os.path.exists("code_library"):
@@ -14,43 +15,31 @@ VALID_EXTENSIONS = {
     ".sublime-snippet", ".sublime-build", ".sh", ".bash"
 }
 
-# EXACT Table of Contents structure matched to repo file tree
+# COMPLETE Table of Contents structure with wide-reaching candidate naming
 EXACT_TOC = [
     {
         "chapter": "Templates and Scripts",
         "folder_candidates": ["scripts", "template", "templates"],
         "sections": [
-            ("sublime", [
-                "cp.sublime-build", "sublime", "sublime.cpp", "sublime.txt", 
-                "sublime.json", "sublime-snippet", "cpp.sublime-build", 
-                "sublime_settings", "sublime_template"
-            ]),
-            ("vs code", [
-                "tasks.json", "vscode", "vs_code", "settings.json", "cpp.json", 
-                "vscode.json", "vs_code.json", "vscode.cpp", "vs_code.cpp"
-            ]),
-            ("Interactor", [
-                "interactor.sh", "interactor.cpp", "interactor", "interactive.cpp", 
-                "tester.cpp", "interactor.h", "interactive.sh"
-            ]),
-            ("debug.h", [
-                "debug.h", "debug.cpp", "debug", "dbg.h"
-            ]),
+            ("sublime", ["cp.sublime-build", "sublime", "sublime.cpp", "sublime.txt", "sublime.json", "sublime-snippet", "cpp.sublime-build"]),
+            ("vs code", ["tasks.json", "vscode", "vs_code", "settings.json", "cpp.json", "vscode.json"]),
+            ("Interactor", ["interactor.sh", "interactor.cpp", "interactor", "interactive.cpp", "tester.cpp"]),
+            ("debug.h", ["debug.h", "debug.cpp", "debug", "dbg.h"]),
         ]
     },
     {
         "chapter": "Number Theory",
         "folder_candidates": ["nt", "number_theory"],
         "sections": [
-            ("mini mod", ["mini_mod.cpp", "minimod.cpp", "mod.cpp", "mini_mod"]),
+            ("mini mod", ["mini_mod.cpp", "minimod.cpp", "mod.cpp"]),
             ("Binomial Coeffecient", ["binomial_coeffecient.cpp", "binomial_coefficient.cpp", "ncr.cpp", "binomial.cpp"]),
             ("Sieve, SPF, Phi", ["sieve.cpp", "sieve_spf_phi.cpp", "sieve_spf.cpp", "spf.cpp"]),
             ("Segmented Sieve", ["segmented_sieve.cpp", "seg_sieve.cpp"]),
             ("Safe LCM", ["safe_lcm.cpp", "lcm.cpp"]),
-            ("Extended GCD", ["ext_gcd.cpp", "extended_gcd.cpp", "egcd.cpp"]),
-            ("CRT", ["crt.cpp", "chinese_remainder_theorem.cpp"]),
+            ("Extended GCD", ["ext_gcd.cpp", "extended_gcd.cpp", "egcd.cpp", "extgcd.cpp"]),
+            ("CRT", ["crt.cpp", "chinese_remainder_theorem.cpp", "crt.h"]),
             ("Diophantine Equation", ["diophantine.cpp", "diophantine_equation.cpp"]),
-            ("Pollar Rho Factorization", ["pollard_rho.cpp", "pollar_rho.cpp", "pollard.cpp", "pollar_rho_factorization.cpp"]),
+            ("Pollar Rho Factorization", ["pollard_rho.cpp", "pollar_rho.cpp", "pollard.cpp"]),
         ]
     },
     {
@@ -75,15 +64,15 @@ EXACT_TOC = [
             ("Merge Sort Tree", ["mst.cpp", "merge_sort_tree.cpp"]),
             ("Merse Sort Tree with Update", ["mst_with_update.cpp", "merse_sort_tree_with_update.cpp", "mst_update.cpp"]),
             ("Treap", ["treap.cpp"]),
-            ("Segment Tree 2D (1 based)", ["segtree_2D.cpp", "segtree_2d.cpp", "segtree_2d_1based.cpp"]),
-            ("Segment Tree 2D (Index compression)", ["segtree_2D_index_comp.cpp", "segtree_2d_index_compression.cpp", "segtree_2d_comp.cpp"]),
+            ("Segment Tree 2D (1 based)", ["segtree_2D.cpp", "segtree_2d.cpp"]),
+            ("Segment Tree 2D (Index compression)", ["segtree_2D_index_comp.cpp", "segtree_2d_index_compression.cpp"]),
             ("DSU", ["dsu.cpp", "disjoint_set.cpp"]),
             ("SQRT Decomposition", ["sqrt_decomposition.cpp", "sqrt.cpp", "sqrt_decomp.cpp"]),
-            ("MOs Algorithm", ["normal_mo.cpp", "mos_algorithm.cpp", "mo.cpp", "mos.cpp"]),
-            ("MOs with updates", ["mos_with_updates.cpp", "mo_update.cpp", "mo_updates.cpp"]),
-            ("Treap", ["implicit_treap.cpp", "treap.cpp"]),
+            ("MOs Algorithm", ["normal_mo.cpp", "mos_algorithm.cpp", "mo.cpp"]),
+            ("MOs with updates", ["mos_with_updates.cpp", "mo_update.cpp"]),
+            ("Implicit Treap", ["implicit_treap.cpp", "treap_implicit.cpp", "implicit.cpp", "treap.cpp"]),
             ("Wavelet Tree", ["wavelet_tree.cpp", "wavelet.cpp"]),
-            ("Sparse Table (RMQ)", ["sparse_table.cpp", "rmq.cpp", "sparse.cpp"]),
+            ("Sparse Table (RMQ)", ["sparse_table.cpp", "rmq.cpp"]),
             ("Prefix Sum 2D", ["pref_sum_2D.cpp", "prefix_sum_2d.cpp"]),
             ("Prefix Sum 3D", ["pref_sum_3D.cpp", "prefix_sum_3d.cpp"]),
         ]
@@ -94,14 +83,14 @@ EXACT_TOC = [
         "sections": [
             ("Dijkstra", ["dijkstra.cpp"]),
             ("Bellmanford", ["bellmanford.cpp", "bellman_ford.cpp"]),
-            ("BCC, Bridge, AP", ["bcc_bridge_ap.cpp", "bcc.cpp", "bridge_ap.cpp", "bridges.cpp"]),
-            ("2CC", ["2cc.cpp", "twocc.cpp", "2_edge_connected.cpp"]),
+            ("BCC, Bridge, AP", ["bcc_bridge_ap.cpp", "bcc.cpp", "bridge_ap.cpp"]),
+            ("2CC", ["2cc.cpp", "twocc.cpp"]),
             ("LCA", ["lca.cpp", "binary_lifting.cpp"]),
-            ("SCC", ["scc.cpp", "tarjan.cpp"]),
+            ("SCC", ["scc.cpp", "tarjan.cpp", "kosaraju.cpp", "strongly_connected_components.cpp"]),
             ("Kosaraju", ["kosaraju.cpp"]),
             ("HLD", ["hld.cpp", "heavy_light_decomposition.cpp"]),
             ("Centroid Decomposition", ["centroid_decomposition.cpp", "centroid.cpp", "cd.cpp", "centroid_decomp.cpp"]),
-            ("Arpa's Trick", ["arpas_trick.cpp", "arpa.cpp", "arpa_trick.cpp"]),
+            ("Arpa's Trick", ["arpas_trick.cpp", "arpa_trick.cpp"]),
         ]
     },
     {
@@ -110,6 +99,7 @@ EXACT_TOC = [
         "sections": [
             ("Min Cost Max Flow", ["min_cost_max_flow.cpp", "mcmf.cpp", "mincost_maxflow.cpp"]),
             ("Dinic", ["dinic.cpp", "dinics.cpp"]),
+            ("Edmonds Karp", ["edmonds_karp.cpp", "edmond_karp.cpp", "ek.cpp", "edmonds.cpp", "edmondkarp.cpp"]),
             ("HopcroftKarp", ["hopcroft_karp.cpp", "hopcroftkarp.cpp", "hopcroft.cpp"]),
         ]
     },
@@ -119,29 +109,26 @@ EXACT_TOC = [
         "sections": [
             ("Trie", ["trie.cpp"]),
             ("Bit Trie", ["bit_trie.cpp", "bittrie.cpp"]),
-            ("Z Algorithm", ["z_algorithm.cpp", "z.cpp", "z_function.cpp", "zalgo.cpp"]),
+            ("Z Algorithm", ["z_algorithm.cpp", "z.cpp", "z_function.cpp", "zalgo.cpp", "z-algorithm.cpp"]),
             ("KMP", ["kmp.cpp", "KMP.h"]),
             ("Suffix Array", ["suffix_array.cpp", "sa.cpp", "SuffixArray.h"]),
-            ("Suffix Automaton", [
-                "suffix_automation.cpp", "suffix_automaton.cpp", 
-                "suffix_automata.cpp", "sam.cpp", "automaton.cpp"
-            ]),
-            ("Manacher", ["manacher.cpp", "manachers.cpp", "Manacher.h"]),
-            ("Aho Corasick", ["aho_corasick.cpp", "aho.cpp", "ahocorasick.cpp", "AhoCorasick.h"]),
+            ("Suffix Automaton", ["suffix_automation.cpp", "suffix_automaton.cpp", "sam.cpp"]),
+            ("Manacher", ["manacher.cpp", "Manacher.h"]),
+            ("Aho Corasick", ["aho_corasick.cpp", "aho.cpp", "AhoCorasick.h"]),
             ("Min Lexic Rotation", ["min_lexic_rotation.cpp", "minimal_rotation.cpp", "min_rotation.cpp", "minlex.cpp"]),
             ("Longest Palindrome", ["longest_palindrome.cpp", "palindrome.cpp"]),
-            ("Wildcard Matching", ["wildcard_matching.cpp", "wildcard.cpp"]),
-            ("Hashing", ["hashing.cpp", "string_hash.cpp", "hash.cpp", "hashing.h"]),
-            ("2D Hash", ["2d_hash.cpp", "hash_2d.cpp", "hash2d.cpp", "2dhash.cpp", "hashing2D.cpp"]),
+            ("Wildcard Matching", ["wildcard_matching.cpp", "wildcard.cpp", "wildcard_match.cpp"]),
+            ("Hashing", ["hashing.cpp", "string_hash.cpp", "hash.cpp"]),
+            ("2D Hash", ["2d_hash.cpp", "hash_2d.cpp", "2dhash.cpp", "hash2d.cpp", "two_d_hash.cpp", "twodhash.cpp", "matrix_hash.cpp", "grid_hash.cpp", "string_hash_2d.cpp"]),
         ]
     },
     {
         "chapter": "Numerical",
         "folder_candidates": ["numerical", "math"],
         "sections": [
-            ("FFT", ["fft.cpp"]),
-            ("FFT With mod M", ["fft_mod.cpp", "fft_with_mod_m.cpp", "fft_mod_m.cpp"]),
-            ("NTT", ["ntt.cpp"]),
+            ("FFT", ["fft.cpp", "fft.h", "fast_fourier_transform.cpp"]),
+            ("FFT With mod M", ["fft_mod.cpp", "fft_with_mod_m.cpp", "fft_mod_m.cpp", "fftmod.cpp"]),
+            ("NTT", ["ntt.cpp", "ntt.h"]),
             ("FWHT", ["fwht.cpp", "fwt.cpp", "walsh_hadamard.cpp"]),
         ]
     },
@@ -150,145 +137,151 @@ EXACT_TOC = [
         "folder_candidates": ["matrix", "linear_algebra"],
         "sections": [
             ("The Matrix Class", ["matrix_class.cpp", "matrix.cpp"]),
-            ("Gaussian Elimination", ["gaussian_elimination.cpp", "gauss.cpp", "gaussian.cpp"]),
+            ("Gaussian Elimination", ["gaussian_elimination.cpp", "gauss.cpp"]),
             ("Determinant", ["determinant.cpp", "det.cpp"]),
             ("Matrix Inverse", ["matrix_inverse.cpp", "inverse.cpp"]),
-            ("Xor Basis", ["xor_basis.cpp", "linear_basis.cpp", "basis.cpp"]),
+            ("Xor Basis", ["xor_basis.cpp", "linear_basis.cpp"]),
         ]
     },
     {
         "chapter": "Geometry",
         "folder_candidates": ["geometry_shohag_bhai", "geometry"],
         "sections": [
-            ("Full Template", ["shohag_bhai.cpp", "full_template.cpp", "geometry.cpp", "shohag.cpp", "kactl.cpp"]),
+            ("Full Template", ["shohag_bhai.cpp", "full_template.cpp", "geometry.cpp", "shohag.cpp", "kactl.cpp", "geo.cpp"]),
         ]
     },
     {
         "chapter": "Miscellaneous",
         "folder_candidates": ["misc", "miscellaneous"],
         "sections": [
-            ("Interval Container", ["interval_container.cpp", "intervals.cpp"]),
+            ("Interval Container", ["interval_container.cpp", "intervals.cpp", "interval.cpp", "odt.cpp", "chtholly.cpp"]),
             ("Efficient Mask Traversal", ["efficient_mask_traversal.cpp", "mask_traversal.cpp"]),
             ("Generationg Permutations", ["generating_permutations.cpp", "generationg_permutations.cpp", "permutations.cpp"]),
-            ("Iterating over Submasks", ["iterating_submasks.cpp", "iterating_over_submasks.cpp", "submask.cpp"]),
-            ("Random", ["random.cpp", "rng.cpp"]),
-            ("Index compression", ["index_compression.cpp", "coordinate_compression.cpp", "compress.cpp"]),
-            ("pbds", ["pbds.cpp", "policy_based_data_structures.cpp"]),
+            ("Iterating over Submasks", ["iterating_submasks.cpp", "submask.cpp"]),
+            ("Random", ["random.cpp", "rng.cpp", "rand.cpp"]),
+            ("Index compression", ["index_compression.cpp", "coordinate_compression.cpp"]),
+            ("pbds", ["pbds.cpp"]),
             ("Bitset", ["bitset.cpp"]),
             ("Primes", ["primes.cpp"]),
-            ("Digit Range Sum", ["digit_range_sum.cpp", "digit_dp.cpp"]),
+            ("Digit Range Sum", ["digit_range_sum.cpp", "digit_dp.cpp", "digit_sum.cpp"]),
             ("Custom Hash", ["custom_hash.cpp", "gp_hash_table.cpp"]),
         ]
     }
 ]
 
-def search_entire_repo(candidate_filenames):
-    """Fallback: Search entire directory tree recursively for any matching candidate file."""
+def clean_name(s):
+    return re.sub(r'[^a-z0-9]', '', s.lower())
+
+def load_existing_descriptions():
+    descriptions = {}
+    pattern = r'\\codeWithDescription\*?\{([^}]+)\}\s*\{([^}]+)\}\s*\[(.*?)\]'
     for root, _, files in os.walk(BASE_DIR):
-        if ".git" in root or "build" in root:
-            continue
+        if ".git" in root or "build" in root: continue
         for f in files:
-            ext = os.path.splitext(f)[1].lower()
-            if ext in VALID_EXTENSIONS or os.path.splitext(f)[0].lower() in candidate_filenames:
-                for cand in candidate_filenames:
-                    cand_clean = cand.lower().replace("_", "").replace("-", "").replace(".", "")
-                    f_clean = f.lower().replace("_", "").replace("-", "").replace(".", "")
-                    if cand_clean == f_clean or (len(cand_clean) > 3 and cand_clean in f_clean):
-                        return os.path.join(root, f).replace("\\", "/")
-    return None
+            if f.endswith(".tex") and f != OUTPUT_TEX and f != "main.tex":
+                try:
+                    with open(os.path.join(root, f), "r", encoding="utf-8") as fo:
+                        for title, file_key, desc in re.findall(pattern, fo.read(), re.DOTALL):
+                            descriptions[title.strip().lower()] = desc.strip()
+                            descriptions[os.path.basename(file_key).strip().lower()] = desc.strip()
+                except: pass
+    return descriptions
 
 def find_file(folder_candidates, candidate_filenames):
-    # 1. Check target folder candidates
+    clean_cands = [clean_name(os.path.splitext(c)[0]) for c in candidate_filenames]
+    
+    # Strategy 1: Targeted folder scan
     for f_cand in folder_candidates:
         folder_path = os.path.join(BASE_DIR, "code_library", f_cand)
-        if not os.path.exists(folder_path):
-            continue
-        
-        dir_files = [f for f in os.listdir(folder_path) if os.path.splitext(f)[1].lower() in VALID_EXTENSIONS or os.path.splitext(f)[0].lower() in candidate_filenames]
-        
-        for cand in candidate_filenames:
-            for actual in dir_files:
-                if actual.lower() == cand.lower():
-                    return os.path.join(folder_path, actual).replace("\\", "/"), folder_path
-        
-        for cand in candidate_filenames:
-            cand_base = os.path.splitext(cand)[0].lower()
-            for actual in dir_files:
-                actual_base = os.path.splitext(actual)[0].lower()
-                if actual_base == cand_base:
-                    return os.path.join(folder_path, actual).replace("\\", "/"), folder_path
+        if os.path.exists(folder_path):
+            for root, _, files in os.walk(folder_path):
+                for f in files:
+                    if os.path.splitext(f)[1].lower() in VALID_EXTENSIONS:
+                        f_clean = clean_name(os.path.splitext(f)[0])
+                        if f_clean in clean_cands:
+                            return os.path.join(root, f).replace("\\", "/"), root
 
-        for cand in candidate_filenames:
-            clean_cand = os.path.splitext(cand)[0].lower().replace("_", "").replace("-", "").replace(" ", "")
-            if len(clean_cand) < 2:
-                continue
-            for actual in dir_files:
-                clean_actual = os.path.splitext(actual)[0].lower().replace("_", "").replace("-", "").replace(" ", "")
-                if clean_cand in clean_actual or clean_actual in clean_cand:
-                    return os.path.join(folder_path, actual).replace("\\", "/"), folder_path
-
-    # 2. Repo-wide fallback search if not in target folder
-    repo_match = search_entire_repo(candidate_filenames)
-    if repo_match:
-        return repo_match, os.path.dirname(repo_match)
-
+    # Strategy 2: Ultra-fuzzy global workspace fallback match
+    for root, _, files in os.walk(BASE_DIR):
+        if any(p in root for p in [".git", "build", ".vscode"]): continue
+        for f in files:
+            if os.path.splitext(f)[1].lower() in VALID_EXTENSIONS:
+                f_clean = clean_name(os.path.splitext(f)[0])
+                for c_clean in clean_cands:
+                    if f_clean == c_clean or (len(f_clean) > 2 and f_clean in c_clean) or (len(c_clean) > 2 and c_clean in f_clean):
+                        return os.path.join(root, f).replace("\\", "/"), root
+                            
     return None, None
 
 def find_formulae_file():
-    """Locate formulae.tex, math.tex, or any TeX file in a formulae directory."""
     for root, _, files in os.walk(BASE_DIR):
-        if ".git" in root or "build" in root:
-            continue
+        if ".git" in root or "build" in root: continue
         for f in files:
-            if f.endswith(".tex"):
-                f_lower = f.lower()
-                root_lower = root.lower()
-                if "formula" in f_lower or "math" in f_lower or "formula" in root_lower:
-                    return os.path.join(root, f).replace("\\", "/")
+            if f.endswith(".tex") and ("formula" in f.lower() or "math" in f.lower()):
+                return os.path.join(root, f).replace("\\", "/")
     return None
 
 def build_tex():
     lines = []
-    total_files = 0
+    missing_sections = []
+
+    print("Parsing workspace for template descriptions...")
+    descriptions = load_existing_descriptions()
 
     for item in EXACT_TOC:
         chapter_title = item["chapter"]
         lines.append(f"\\chapter{{{chapter_title}}}")
 
         for exact_section_title, candidates in item["sections"]:
-            matched_file, folder_path = find_file(item["folder_candidates"], candidates)
-            
+            matched_file, _ = find_file(item["folder_candidates"], candidates)
             lines.append(f"\\section{{{exact_section_title}}}")
-            if matched_file:
-                ext = os.path.splitext(matched_file)[1].lower()
-                if ext == ".tex":
-                    lines.append(f"\\input{{{matched_file}}}")
-                elif ext in {".json", ".txt", ".sublime-snippet", ".sublime-build", ".sh", ".bash"}:
-                    lines.append(f"\\lstinputlisting[language=bash]{{{matched_file}}}")
-                else:
-                    lines.append(f"\\lstinputlisting[language=C++]{{{matched_file}}}")
-                total_files += 1
+            
+            if not matched_file:
+                missing_sections.append((chapter_title, exact_section_title, candidates))
+                lines.append(f"\\noindent\\color{{red}}\\textbf{{[Missing Code File: Looked for {candidates[0]}]}}\\color{{black}}")
+                lines.append("")
+                continue
+
+            norm_title = exact_section_title.strip().lower()
+            file_key = os.path.basename(matched_file).strip().lower()
+            has_description = (norm_title in descriptions or file_key in descriptions)
+
+            if has_description:
+                desc_text = descriptions.get(norm_title) or descriptions.get(file_key)
+                lines.append(f"\\codeWithDescription{{{exact_section_title}}}{{{matched_file}}}[\n{desc_text}\n]")
             else:
-                lines.append(f"% WARNING: File for '{exact_section_title}' not found in repository.")
-                print(f"⚠️ Warning: Could not locate file for '{exact_section_title}'.")
+                ext = os.path.splitext(matched_file)[1].lower()
+                if ext == ".tex": lines.append(f"\\input{{{matched_file}}}")
+                elif ext in {".json", ".txt", ".sublime-snippet", ".sublime-build", ".sh"}:
+                    lines.append(f"\\lstinputlisting[language=bash]{{{matched_file}}}")
+                else: lines.append(f"\\lstinputlisting[language=C++]{{{matched_file}}}")
             lines.append("")
 
-    # Formulae chapter
+    # Formulae internal chapter check
     formulae_file = find_formulae_file()
-    lines.append("\\chapter{Formulae}")
     if formulae_file:
+        has_internal_chapter = False
+        try:
+            with open(formulae_file, "r", encoding="utf-8") as f:
+                if "\\chapter" in f.read(): has_internal_chapter = True
+        except: pass
+        
+        if not has_internal_chapter: lines.append("\\chapter{Formulae}")
         lines.append(f"\\input{{{formulae_file}}}")
-        total_files += 1
-        print(f"✅ Found Formulae section at '{formulae_file}'")
     else:
-        lines.append("% WARNING: Formulae file not found in repository.")
-        print("⚠️ Warning: Could not find formulae .tex file in repository.")
-    lines.append("")
+        lines.append("\\chapter{Formulae}\n% Formulae file not found.")
 
     with open(OUTPUT_TEX, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 
-    print(f"✅ Successfully generated '{OUTPUT_TEX}' ({total_files} active files integrated).")
+    print("\n" + "="*50 + "\n             CRITICAL FILE AUDIT REPORT             \n" + "="*50)
+    if missing_sections:
+        for ch, sec, cands in missing_sections:
+            print(f"❌ MISSING: [{ch}] -> \"{sec}\" (Target: {cands[0]})")
+        print("\n👉 Fuzzy scan complete. If items are still missing, verify they aren't completely untracked or deleted.")
+    else:
+        print("🙌 All files perfectly mapped and generated!")
+    print("="*50 + "\n")
 
 if __name__ == "__main__":
     build_tex()
